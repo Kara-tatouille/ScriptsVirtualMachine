@@ -3,12 +3,12 @@
 # # # # # # # # # # This script is awesome! # # # # # # # # # # 
 
 clear
-rm -rf Vagrantfile ubuntu-xenial-16.04-cloudimg-console.log
+rm Vagrantfile ubuntu-xenial-16.04-cloudimg-console.log
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 echo 'Voici une liste des VMs:'
-vboxmanage list vms --long | grep -e "Name:" -e "State:"
+vboxmanage list vms
 
 #echo 'Veux tu allumer une VM? 1)Oui 2)Non'
 #select opt in Oui Non
@@ -48,23 +48,23 @@ echo "...Création d'une nouvelle VM..."
 
 echo 'Quelle ip?'
   read ip
-echo 'Quel nom de dossier sync? (ne rien mettre pour un nom par défaut)'
-  read file
-echo 'Quel nom de VM? (ne rien mettre pour un nom par défaut)'
-  read nom
-
-
 while [[ "$ip" != "192.168.33."* ]]; do
-  echo 'Mauvaise ip, réentrer ip:'
+  echo 'ip doit être 192.168.33.XX, réentrer ip:'
   read ip
 done
+echo 'Quel nom de dossier sync? (ne rien mettre pour "Data")'
+  read file
+echo 'Quel nom de VM? (ne rien mettre pour "Défaut")'
+  read nom
+  nom="$nom - ip:$ip"
 
-if [[ "$nom" = "" ]]; then
-  nom=Default
+
+if [[ "$nom" = " - ip:$ip" ]]; then
+  nom="Défaut-ip:$ip"
 fi
 
 if [[ "$file" = "" ]]; then
-  file=default
+  file=data
 fi
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -89,15 +89,24 @@ mkdir ./$file
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-echo '
+echo "
 #!bin/bash
 
+sudo add-apt-repository ppa:ondrej/php -y
 sudo apt update
 sudo apt install apache2 -y
-' >./$file/install.sh
+sudo apt install php7.2 -y
+sudo apt install libapache2-mod-php7.2 -y
+sudo apt install php7.2-mysql -y
+sudo apt install mysql-server -y
+sudo sed -i '479s/Off/On/' /etc/php/7.2/apache2/php.ini
+sudo sed -i '490s/Off/On/' /etc/php/7.2/apache2/php.ini
+sudo service apache2 restart
+" >./$file/install.sh
+
+
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 vagrant up
-rm -rf ubuntu-xenial-16.04-cloud-img-console.log
 vagrant ssh
