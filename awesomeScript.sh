@@ -43,32 +43,32 @@ vboxmanage list vms
 #	break
 #done
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #Core, création de Vagrantfile, dossier sync et config de l'ip
+# # # # # # # # # # # # # # Core # # # # # # # # # # # # # # # # # 
 
 echo "...Création d'une nouvelle VM..."
 
-echo 'Quelle ip?'
+echo 'Quelle ip?' #Choix de l'ip du serveur
   read ip
-while [[ "$ip" != "192.168.33."* ]]; do
+while [[ "$ip" != "192.168.33."* ]]; do #redemmande l'ip si elle est incorrecte
   echo 'ip doit être 192.168.33.XX, réentrer ip:'
   read ip
 done
-echo 'Quel nom de dossier sync? (ne rien mettre pour "Data")'
+echo 'Quel nom de dossier sync? (ne rien mettre pour "Data")' #customise le nom du dossier de syncronisation de Vagrant
   read file
-echo 'Quel nom de VM? (ne rien mettre pour "Défaut")'
+echo 'Quel nom de VM? (ne rien mettre pour "Défaut")' #customise le nom de la VM et ajoute l'addresse ip du server à coté
   read nom
   nom="$nom - ip:$ip"
 
 
-if [[ "$nom" = " - ip:$ip" ]]; then
+if [[ "$nom" = " - ip:$ip" ]]; then #Nom par défaut de la VM
   nom="Défaut-ip:$ip"
 fi
 
-if [[ "$file" = "" ]]; then
-  file=data
+if [[ "$file" = "" ]]; then #Nom par défaut du dossier de syncronisation de Vagrant
+  file='data'
 fi
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #Vagrantfile
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 echo "
 # -*- mode: ruby -*-
@@ -82,34 +82,63 @@ Vagrant.configure(\"2\") do |config|
     v.name = \"$nom\"
   end
 end
-" >./Vagrantfile
+" >./Vagrantfile #Ficher de config de Vagrant
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #Dossier sync
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-mkdir ./$file
+mkdir ./$file #Dossier sync
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #Installation de Adminer
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-wget https://github.com/vrana/adminer/releases/download/v4.7.1/adminer-4.7.1-mysql.php
+wget https://github.com/vrana/adminer/releases/download/v4.7.1/adminer-4.7.1-mysql.php #Installation de Adminer
 mv adminer-4.7.1-mysql.php ./$file/adminer.php
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #Création du script d'installation une fois dans la VM
 
-echo "
-#!bin/bash
+#todo: choix de la version PHP
 
-sudo add-apt-repository ppa:ondrej/php -y
-sudo apt update
-sudo apt install apache2 -y
-sudo apt install php7.2 -y
-sudo apt install libapache2-mod-php7.2 -y
-sudo apt install php7.2-mysql -y
-sudo apt install mysql-server -y
-sudo sed -i '479s/Off/On/' /etc/php/7.2/apache2/php.ini
-sudo sed -i '490s/Off/On/' /etc/php/7.2/apache2/php.ini
-sudo service apache2 restart
-" >./$file/install.sh
+
+# echo 'Veuillez choisir une version de PHP: (défaut 7.2)  (7.0)' #Choix de la version de PHP
+# read phpVersion
+
+# while [[ $phpVersion != '7.2' || $phpVersion != '7.0' || $phpVersion != '' ]]; do #Si le choix n'est pas reconnu, redemmander une bonne valeur
+#   echo 'Valeur incorrecte, réentrer la version de PHP: (défaut 7.2)  (7.0)'
+#   read phpVersion
+# done
+
+# if [[ $phpVersion = '7.2' || $phpVersion = '' ]]; then #Création du script pour PHP7.2 (choix par défaut)
+  echo "
+  #!bin/bash
+
+  sudo add-apt-repository ppa:ondrej/php -y
+  sudo apt update
+  sudo apt install apache2 -y
+  sudo apt install php7.2 -y
+  sudo apt install libapache2-mod-php7.2 -y
+  sudo apt install php7.2-mysql -y
+  sudo sed -i '479s/Off/On/' /etc/php/7.2/apache2/php.ini
+  sudo sed -i '490s/Off/On/' /etc/php/7.2/apache2/php.ini
+  sudo apt install mysql-server -y
+  sudo service apache2 restart
+  " >./$file/install.sh
+# elif [[ $phpVersion = '7.0' ]]; then #Création du script pour PHP7.0
+#   echo "
+#   #!bin/bash
+
+#   sudo add-apt-repository ppa:ondrej/php -y
+#   sudo apt update
+#   sudo apt install apache2 -y
+#   sudo apt install php7.0 -y
+#   sudo apt install libapache2-mod-php7.0 -y
+#   sudo apt install php7.0-mysql -y
+#   sudo sed -i '479s/Off/On/' /etc/php/7.0/apache2/php.ini
+#   sudo sed -i '490s/Off/On/' /etc/php/7.0/apache2/php.ini 
+#   sudo apt install mysql-server -y
+#   sudo service apache2 restart
+#   " >./$file/install.sh #sed à changer!! ne marche pas pour l'instant
+# else echo 'Big bug, pls contact Corenbla' #Si jamais $phpVersion a buggé
+# fi
 
 
 
