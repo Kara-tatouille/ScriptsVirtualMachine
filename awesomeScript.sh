@@ -10,6 +10,7 @@ rm Vagrantfile ubuntu-xenial-16.04-cloudimg-console.log
 echo 'Voici une liste des VMs:'
 vboxmanage list vms
 
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # Vieux trucs pour validation, inutile.
 #echo 'Veux tu allumer une VM? 1)Oui 2)Non'
 #select opt in Oui Non
 #do
@@ -42,7 +43,7 @@ vboxmanage list vms
 #	break
 #done
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #Core, création de Vagrantfile, dossier sync et config de l'ip
 
 echo "...Création d'une nouvelle VM..."
 
@@ -67,7 +68,7 @@ if [[ "$file" = "" ]]; then
   file=data
 fi
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #Vagrantfile
 
 echo "
 # -*- mode: ruby -*-
@@ -83,17 +84,17 @@ Vagrant.configure(\"2\") do |config|
 end
 " >./Vagrantfile
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #Dossier sync
 
 mkdir ./$file
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #Installation de Adminer
 
 wget https://github.com/vrana/adminer/releases/download/v4.7.1/adminer-4.7.1-mysql.php
 mv adminer-4.7.1-mysql.php ./$file/adminer.php
 
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #Création du script d'installation une fois dans la VM
 
 echo "
 #!bin/bash
