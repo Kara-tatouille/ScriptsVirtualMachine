@@ -89,6 +89,12 @@ mkdir ./$file
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
+wget https://github.com/vrana/adminer/releases/download/v4.7.1/adminer-4.7.1-mysql.php
+mv adminer-4.7.1-mysql.php ./$file/adminer.php
+
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
 echo "
 #!bin/bash
 
