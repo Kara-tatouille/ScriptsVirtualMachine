@@ -13,6 +13,7 @@
 **Ce que ce script installe:**
 
 - Apache 2
+- Libapache
 - Php 7.2 (WIP choix entre 7.2 et 7.0)
 - **Active les erreurs Php**
 - MySQL
