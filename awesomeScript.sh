@@ -86,28 +86,18 @@ end
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-mkdir ./$file #Dossier sync
+mkdir ./${file} #Dossier sync
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 wget https://github.com/vrana/adminer/releases/download/v4.7.1/adminer-4.7.1-mysql.php #Installation de Adminer
-mv adminer-4.7.1-mysql.php ./$file/adminer.php
+mv adminer-4.7.1-mysql.php ./${file}/adminer.php
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #Création du script d'installation une fois dans la VM
 
 #todo: choix de la version PHP
 
-
-# echo 'Veuillez choisir une version de PHP: (défaut 7.2)  (7.0)' #Choix de la version de PHP
-# read phpVersion
-
-# while [[ $phpVersion != '7.2' || $phpVersion != '7.0' || $phpVersion != '' ]]; do #Si le choix n'est pas reconnu, redemmander une bonne valeur
-#   echo 'Valeur incorrecte, réentrer la version de PHP: (défaut 7.2)  (7.0)'
-#   read phpVersion
-# done
-
-# if [[ $phpVersion = '7.2' || $phpVersion = '' ]]; then #Création du script pour PHP7.2 (choix par défaut)
   echo "
   #!bin/bash
 
@@ -121,25 +111,7 @@ mv adminer-4.7.1-mysql.php ./$file/adminer.php
   sudo sed -i '490s/Off/On/' /etc/php/7.2/apache2/php.ini
   sudo apt install mysql-server -y
   sudo service apache2 restart
-  " >./$file/install.sh
-# elif [[ $phpVersion = '7.0' ]]; then #Création du script pour PHP7.0
-#   echo "
-#   #!bin/bash
-
-#   sudo add-apt-repository ppa:ondrej/php -y
-#   sudo apt update
-#   sudo apt install apache2 -y
-#   sudo apt install php7.0 -y
-#   sudo apt install libapache2-mod-php7.0 -y
-#   sudo apt install php7.0-mysql -y
-#   sudo sed -i '479s/Off/On/' /etc/php/7.0/apache2/php.ini
-#   sudo sed -i '490s/Off/On/' /etc/php/7.0/apache2/php.ini 
-#   sudo apt install mysql-server -y
-#   sudo service apache2 restart
-#   " >./$file/install.sh #sed à changer!! ne marche pas pour l'instant
-# else echo 'Big bug, pls contact Corenbla' #Si jamais $phpVersion a buggé
-# fi
-
+  " >./${file}/install.sh
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
