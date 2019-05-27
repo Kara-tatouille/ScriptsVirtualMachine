@@ -121,6 +121,7 @@ mv adminer-4.7.1-mysql.php ./$file/adminer.php
   sudo sed -i '490s/Off/On/' /etc/php/7.2/apache2/php.ini
   sudo apt install mysql-server -y
   sudo service apache2 restart
+  rm /var/www/html/install.sh
   " >./$file/install.sh
 # elif [[ $phpVersion = '7.0' ]]; then #Création du script pour PHP7.0
 #   echo "
@@ -143,6 +144,9 @@ mv adminer-4.7.1-mysql.php ./$file/adminer.php
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+
+rm awesomeScript.sh
 
 vagrant up
 vagrant ssh
