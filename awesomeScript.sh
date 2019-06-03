@@ -68,23 +68,6 @@ if [[ "$file" = "" ]]; then #Nom par défaut du dossier de syncronisation de Vag
   file='data'
 fi
 
-echo 'Voulez vous init un Git? y/N'
-read gitInit
-case ${gitInit} in
-'y','Y')
-    git init
-    echo '.idea' > .gitignore #Ficher .gitignore
-    ;;
-'n','N','')
-    break
-    ;;
-*)
-    echo "Je n'ai pas compris"
-    echo 'Voulez vous init un Git? y/N'
-    read gitInit
-    ;;
-esac
-
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 echo "
@@ -103,12 +86,12 @@ end
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-mkdir ./${file} #Dossier sync
+mkdir ./$file #Dossier sync
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 wget https://github.com/vrana/adminer/releases/download/v4.7.1/adminer-4.7.1-mysql.php #Installation de Adminer
-mv adminer-4.7.1-mysql.php ./${file}/adminer.php
+mv adminer-4.7.1-mysql.php ./$file/adminer.php
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #Création du script d'installation une fois dans la VM
@@ -129,7 +112,7 @@ mv adminer-4.7.1-mysql.php ./${file}/adminer.php
   sudo apt install mysql-server -y
   sudo service apache2 restart
   rm /var/www/html/install.sh
-  " >./${file}/install.sh
+  " >./$file/install.sh
 
 
 
