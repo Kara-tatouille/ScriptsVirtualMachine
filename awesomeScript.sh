@@ -107,8 +107,11 @@ mv adminer-4.7.1-mysql.php ./$file/adminer.php
   sudo apt install libapache2-mod-php7.2 -y
   sudo apt install php7.2-mysql -y
   sudo apt install php-xdebug -y
+  sudo apt install php7.2-zip -y
   sudo sed -i '479s/Off/On/' /etc/php/7.2/apache2/php.ini
   sudo sed -i '490s/Off/On/' /etc/php/7.2/apache2/php.ini
+  sudo sed -i '16s/var-www/vagrant' /etc/apache2/envvars
+  sudo sed -i '17s/var-www/vagrant' /etc/apache2/envvars
   sudo apt install mysql-server -y
   sudo service apache2 restart
   rm /var/www/html/install.sh
