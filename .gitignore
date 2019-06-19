@@ -1,1 +1,5 @@
 .idea/
+000-default.conf
+envvars
+test.sh
+test.txt
