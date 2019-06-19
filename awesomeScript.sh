@@ -86,12 +86,12 @@ end
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-mkdir ./$file #Dossier sync
+mkdir ./${file} #Dossier sync
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 wget https://github.com/vrana/adminer/releases/download/v4.7.1/adminer-4.7.1-mysql.php #Installation de Adminer
-mv adminer-4.7.1-mysql.php ./$file/adminer.php
+mv adminer-4.7.1-mysql.php ./${file}/adminer.php
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #Création du script d'installation une fois dans la VM
@@ -116,8 +116,6 @@ mv adminer-4.7.1-mysql.php ./$file/adminer.php
   sudo service apache2 restart
   rm /var/www/html/install.sh
   " >./$file/install.sh
-
-
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
