@@ -48,15 +48,15 @@ vboxmanage list vms
 echo "...Création d'une nouvelle VM..."
 
 echo 'Quelle ip?' #Choix de l'ip du serveur
-  read ip
+  read -r ip
 while [[ "$ip" != "192.168.33."* ]]; do #redemmande l'ip si elle est incorrecte
   echo 'ip doit être 192.168.33.XX, réentrer ip:'
-  read ip
+  read -r ip
 done
 echo 'Quel nom de dossier sync? (ne rien mettre pour "Data")' #customise le nom du dossier de syncronisation de Vagrant
-  read file
+  read -r file
 echo 'Quel nom de VM? (ne rien mettre pour "Défaut")' #customise le nom de la VM et ajoute l'addresse ip du server à coté
-  read nom
+  read -r nom
   nom="$nom - ip:$ip"
 
 
@@ -98,21 +98,36 @@ mv adminer-4.7.1-mysql.php ./${file}/adminer.php
 
 
   echo "
-  #!bin/bash
+  #!/bin/bash
 
   sudo add-apt-repository ppa:ondrej/php -y
   sudo apt update
   sudo apt install apache2 -y
-  sudo apt install php7.2 -y
-  sudo apt install libapache2-mod-php7.2 -y
-  sudo apt install php7.2-mysql -y
+  sudo apt install php7.3 -y
+  sudo apt install libapache2-mod-php7.3 -y
   sudo apt install php-xdebug -y
-  sudo apt install php7.2-zip -y
+  sudo apt install php7.3-mysql -y
+  sudo apt install php7.3-zip -y
+  sudo apt install php7.3-mbstring -y
+  sudo apt install php7.3-dom -y
+  sudo apt install php7.3-curl -y
+  sudo apt install mysql-server -y
+
+  php -r \"copy('https://getcomposer.org/installer', 'composer-setup.php');\"
+  php -r \"if (hash_file('sha384', 'composer-setup.php') === 'a5c698ffe4b8e849a443b120cd5ba38043260d5c4023dbf93e1558871f1f07f58274fc6f4c93bcfd858c6bd0775cd8d1') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;\"
+  php composer-setup.php
+  php -r \"unlink('composer-setup.php');\"
+  sudo mv composer.phar /usr/local/bin/composer
+
   sudo sed -i '479s/Off/On/' /etc/php/7.2/apache2/php.ini
   sudo sed -i '490s/Off/On/' /etc/php/7.2/apache2/php.ini
   sudo sed -i '16s/var-www/vagrant' /etc/apache2/envvars
   sudo sed -i '17s/var-www/vagrant' /etc/apache2/envvars
-  sudo apt install mysql-server -y
+
+  sudo a2enmod rewrite
+
+  sudo nano /etc/apache2/sites-available/000-default.conf
+
   sudo service apache2 restart
   rm /var/www/html/install.sh
   " >./$file/install.sh
