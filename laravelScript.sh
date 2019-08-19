@@ -53,38 +53,39 @@ mv adminer-4.7.1-mysql.php ./$file/adminer.php  #Installation de Adminer
 
 #####
 
-  echo "
-  #!bin/bash
+echo "
+#!/bin/bash
 
-  sudo apt update
-  sudo apt install apache2 -y
-  sudo apt install libapache2-mod-php7.2 -y
-  sudo sed -i '479s/Off/On/' /etc/php/7.2/apache2/php.ini
-  sudo sed -i '490s/Off/On/' /etc/php/7.2/apache2/php.ini
-  sudo sed -i '16s/var-www/vagrant/' /etc/apache2/envvars
-  sudo sed -i '17s/var-www/vagrant/' /etc/apache2/envvars
-  sed -i 's/\/var\/www\//\/var\/www\/laravel\/public/g' /etc/apache2/sites-available/000-default.conf
-  sed -i '14i\    <Directory />\r' /etc/apache2/sites-available/000-default.conf
-  sed -i '15i\                Options FollowSymLinks\r' /etc/apache2/sites-available/000-default.conf
-  sed -i '16i\                AllowOverride All\r' /etc/apache2/sites-available/000-default.conf
-  sed -i '17i\    </Directory>\r' /etc/apache2/sites-available/000-default.conf
-  sed -i '18i\    <Directory /var/www/>\r' /etc/apache2/sites-available/000-default.conf
-  sed -i '19i\                Options Indexes FollowSymLinks MultiViews\r' /etc/apache2/sites-available/000-default.conf
-  sed -i '20i\                AllowOverride All\r' /etc/apache2/sites-available/000-default.conf
-  sed -i '21i\                Order allow,deny\r' /etc/apache2/sites-available/000-default.conf
-  sed -i '22i\                allow from all\r' /etc/apache2/sites-available/000-default.conf
-  sed -i '23i\    </Directory>\r' /etc/apache2/sites-available/000-default.conf
-  sudo a2enmod rewrite
-  sudo php composer-setup.php --install-dir=/usr/local/bin --filename=composer
-  sudo service apache2 restart
-  echo 'Plus qu\'a créer un projet avec composer create-project --prefer-dist laravel/laravel blog'
-  rm /var/www/html/install.sh
+sudo apt update
+sudo apt install apache2 -y
+sudo apt install libapache2-mod-php7.2 -y
+sudo sed -i '479s/Off/On/' /etc/php/7.2/apache2/php.ini
+sudo sed -i '490s/Off/On/' /etc/php/7.2/apache2/php.ini
+sudo sed -i '16s/var-www/vagrant/' /etc/apache2/envvars
+sudo sed -i '17s/var-www/vagrant/' /etc/apache2/envvars
+sudo a2enmod rewrite
+sudo php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+sudo service apache2 restart
+echo 'Plus qu\'a créer un projet avec composer create-project --prefer-dist laravel/laravel blog'
+rm /var/www/html/install.sh
 
-  " >./$file/install.sh
+" >./$file/install.sh
+
+#  sudo sed -i 's/\/var\/www\//\/var\/www\/laravel\/public/g' /etc/apache2/sites-available/000-default.conf
+#  sudo sed -i '14i\    <Directory />\r' /etc/apache2/sites-available/000-default.conf
+#  sudo sed -i '15i\                Options FollowSymLinks\r' /etc/apache2/sites-available/000-default.conf
+#  sudo sed -i '16i\                AllowOverride All\r' /etc/apache2/sites-available/000-default.conf
+#  sudo sed -i '17i\    </Directory>\r' /etc/apache2/sites-available/000-default.conf
+#  sudo sed -i '18i\    <Directory /var/www/>\r' /etc/apache2/sites-available/000-default.conf
+#  sudo sed -i '19i\                Options Indexes FollowSymLinks MultiViews\r' /etc/apache2/sites-available/000-default.conf
+#  sudo sed -i '20i\                AllowOverride All\r' /etc/apache2/sites-available/000-default.conf
+#  sudo sed -i '21i\                Order allow,deny\r' /etc/apache2/sites-available/000-default.conf
+#  sudo sed -i '22i\                allow from all\r' /etc/apache2/sites-available/000-default.conf
+#  sudo sed -i '23i\    </Directory>\r' /etc/apache2/sites-available/000-default.conf
 
 #####
 
-rm laravelScript.sh
+#rm laravelScript.sh
 
 vagrant up
 vagrant ssh
