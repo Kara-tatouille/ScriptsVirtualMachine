@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# # # # # # # # # # This script is awesome! # # # # # # # # # # 
+# # # # # # # # # # This script is awesome! # # # # # # # # # #
 
 clear
 rm Vagrantfile ubuntu-xenial-16.04-cloudimg-console.log
@@ -43,28 +43,27 @@ vboxmanage list vms
 #	break
 #done
 
-# # # # # # # # # # # # # # Core # # # # # # # # # # # # # # # # # 
+# # # # # # # # # # # # # # Core # # # # # # # # # # # # # # # # #
 
 echo "...Création d'une nouvelle VM..."
 
 echo 'Quelle ip?' #Choix de l'ip du serveur
-  read -r ip
+read -r ip
 while [[ "$ip" != "192.168.33."* ]]; do #redemmande l'ip si elle est incorrecte
   echo 'ip doit être 192.168.33.XX, réentrer ip:'
   read -r ip
 done
 echo 'Quel nom de dossier sync? (ne rien mettre pour "Data")' #customise le nom du dossier de syncronisation de Vagrant
-  read -r file
+read -r file
 echo 'Quel nom de VM? (ne rien mettre pour "Défaut")' #customise le nom de la VM et ajoute l'addresse ip du server à coté
-  read -r nom
-  nom="$nom - ip:$ip"
+read -r nom
+nom="$nom - ip:$ip"
 
-
-if [[ "$nom" = " - ip:$ip" ]]; then #Nom par défaut de la VM
+if [[ "$nom" == " - ip:$ip" ]]; then #Nom par défaut de la VM
   nom="Défaut-ip:$ip"
 fi
 
-if [[ "$file" = "" ]]; then #Nom par défaut du dossier de syncronisation de Vagrant
+if [[ "$file" == "" ]]; then #Nom par défaut du dossier de syncronisation de Vagrant
   file='data'
 fi
 
@@ -82,22 +81,20 @@ Vagrant.configure(\"2\") do |config|
     v.name = \"$nom\"
   end
 end
-" >./Vagrantfile #Ficher de config de Vagrant
+" > ./Vagrantfile #Ficher de config de Vagrant
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-mkdir ./${file} #Dossier sync
+mkdir ./${file}                                                                        #Dossier sync
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 wget https://github.com/vrana/adminer/releases/download/v4.7.1/adminer-4.7.1-mysql.php #Installation de Adminer
 mv adminer-4.7.1-mysql.php ./${file}/adminer.php
 
-
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #Création du script d'installation une fois dans la VM
 
-
-  echo "
+echo "
   #!/bin/bash
 
   sudo add-apt-repository ppa:ondrej/php -y
@@ -130,11 +127,9 @@ mv adminer-4.7.1-mysql.php ./${file}/adminer.php
 
   sudo service apache2 restart
   rm /var/www/html/install.sh
-  " >./$file/install.sh
-
+  " > ./$file/install.sh
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-
 
 rm awesomeScript.sh
 
