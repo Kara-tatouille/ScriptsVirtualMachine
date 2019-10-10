@@ -55,7 +55,7 @@ while [[ "$ip" != "192.168.33."* ]]; do #redemmande l'ip si elle est incorrecte
 done
 echo 'Quel nom de dossier sync? (ne rien mettre pour "Data")' #customise le nom du dossier de syncronisation de Vagrant
 read -r file
-echo 'Quel nom de VM? (ne rien mettre pour "Défaut")' #customise le nom de la VM et ajoute l'addresse ip du server à coté
+echo $'Quel nom de \e[31mVM\e[0m? (ne rien mettre pour "Défaut")' #customise le nom de la VM et ajoute l'addresse ip du server à coté
 read -r nom
 nom="$nom - ip:$ip"
 
@@ -85,49 +85,67 @@ end
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-mkdir ./${file}                                                                        #Dossier sync
+mkdir ./${file} #Dossier sync
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-wget https://github.com/vrana/adminer/releases/download/v4.7.1/adminer-4.7.1-mysql.php #Installation de Adminer
+echo 'Installation de Adminer..'
+wget -q https://github.com/vrana/adminer/releases/download/v4.7.1/adminer-4.7.1-mysql.php #Installation de Adminer
+echo 'Done!'
 mv adminer-4.7.1-mysql.php ./${file}/adminer.php
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #Création du script d'installation une fois dans la VM
 
-echo "
+# shellcheck disable=SC2016
+echo '
   #!/bin/bash
 
-  sudo add-apt-repository ppa:ondrej/php -y
-  sudo apt update
-  sudo apt install apache2 -y
-  sudo apt install php7.3 -y
-  sudo apt install libapache2-mod-php7.3 -y
-  sudo apt install php-xdebug -y
-  sudo apt install php7.3-mysql -y
-  sudo apt install php7.3-zip -y
-  sudo apt install php7.3-mbstring -y
-  sudo apt install php7.3-dom -y
-  sudo apt install php7.3-curl -y
-  sudo apt install mysql-server -y
+  echo "Choisis une version de PHP"
+  select optPHP in php7.3 php7.2 php5.6; do
+    sudo add-apt-repository ppa:ondrej/php -y
+    sudo apt update
+    sudo apt install apache2 -y
+    sudo apt install ${optPHP} -y
+    sudo apt install libapache2-mod-${optPHP} -y
+    sudo apt install php-xdebug -y
+    sudo apt install ${optPHP}-mysql -y
+    sudo apt install ${optPHP}-zip -y
+    sudo apt install ${optPHP}-mbstring -y
+    sudo apt install ${optPHP}-dom -y
+    sudo apt install ${optPHP}-curl -y
+    sudo debconf-set-selections <<< "mysql-server mysql-server/root_password password 1234"
+    sudo debconf-set-selections <<< "mysql-server mysql-server/root_password_again password 1234"
+    sudo apt install mysql-server -y
 
-  php -r \"copy('https://getcomposer.org/installer', 'composer-setup.php');\"
-  php -r \"if (hash_file('sha384', 'composer-setup.php') === 'a5c698ffe4b8e849a443b120cd5ba38043260d5c4023dbf93e1558871f1f07f58274fc6f4c93bcfd858c6bd0775cd8d1') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;\"
-  php composer-setup.php
-  php -r \"unlink('composer-setup.php');\"
-  sudo mv composer.phar /usr/local/bin/composer
+    php -r "copy('\''https://getcomposer.org/installer'\'', '\''composer-setup.php'\'');"
+    php -r "if (hash_file('\''sha384'\'', '\''composer-setup.php'\'') === '\''a5c698ffe4b8e849a443b120cd5ba38043260d5c4023dbf93e1558871f1f07f58274fc6f4c93bcfd858c6bd0775cd8d1'\'') { echo '\''Installer verified'\''; } else { echo '\''Installer corrupt'\''; unlink('\''composer-setup.php'\''); } echo PHP_EOL;"
+    php composer-setup.php
+    php -r "unlink('\''composer-setup.php'\'');"
+    sudo mv composer.phar /usr/local/bin/composer
 
-  sudo sed -i '479s/Off/On/' /etc/php/7.2/apache2/php.ini
-  sudo sed -i '490s/Off/On/' /etc/php/7.2/apache2/php.ini
-  sudo sed -i '16s/var-www/vagrant' /etc/apache2/envvars
-  sudo sed -i '17s/var-www/vagrant' /etc/apache2/envvars
+    case $optPHP in
+    php5.6)
+      sudo sed -i '\''466s/Off/On/'\'' /etc/php/5.6/apache2/php.ini
+      sudo sed -i '\''477s/Off/On/'\'' /etc/php/5.6/apache2/php.ini
+      sudo sed -i '\''16s/www-data/vagrant/'\'' /etc/apache2/envvars
+      sudo sed -i '\''17s/www-data/vagrant/'\'' /etc/apache2/envvars
+      ;;
+    *)
+      sudo sed -i '\''474s/Off/On/'\'' /etc/php/7.3/apache2/php.ini
+      sudo sed -i '\''485s/Off/On/'\'' /etc/php/7.3/apache2/php.ini
+      sudo sed -i '\''16s/www-data/vagrant/'\'' /etc/apache2/envvars
+      sudo sed -i '\''17s/www-data/vagrant/'\'' /etc/apache2/envvars
+      ;;
+esac
 
-  sudo a2enmod rewrite
+    sudo a2enmod rewrite
 
-  sudo nano /etc/apache2/sites-available/000-default.conf
-
-  sudo service apache2 restart
-  rm /var/www/html/install.sh
-  " > ./$file/install.sh
+    sudo service apache2 restart
+    echo "Done! Ton mot de passe mysql est 1234, change le!"
+    break
+    rm /var/www/html/install.sh
+  done
+  ' > ./$file/install.sh
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
