@@ -3,7 +3,11 @@
 **How to:**
 
 - Place le script dans le dossier qui servira de VM
-- Lance le depuis un terminal
+
+```shell script
+$ bash ./awesomeScript.sh
+```
+
 - Suis les instructions, attends d'arriver dans la VM.
 - Une fois dans la vm, faire: 
 ```shell script
