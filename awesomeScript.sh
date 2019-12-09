@@ -47,7 +47,7 @@ vboxmanage list vms
 
 echo "...Création d'une nouvelle VM..."
 
-echo 'Quelle ip?' #Choix de l'ip du serveur
+echo 'ip de la VM à utiliser dans le navigateur? (192.168.33.XX) ' #Choix de l'ip du serveur
 read -r ip
 while [[ "$ip" != "192.168.33."* ]]; do #redemmande l'ip si elle est incorrecte
   echo 'ip doit être 192.168.33.XX, réentrer ip:'
