@@ -89,10 +89,25 @@ mkdir ./${file} #Dossier sync
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-echo 'Installation de Adminer..'
-wget -q https://github.com/vrana/adminer/releases/download/v4.7.1/adminer-4.7.1-mysql.php #Installation de Adminer
-echo 'Done!'
-mv adminer-4.7.1-mysql.php ./${file}/adminer.php
+echo "Installation d'un gestionaire de base de donnée?"
+select optSGBD in Adminer Phpmyadmin; do
+  case $optSGBD in
+  Adminer)
+    echo 'Installation de Adminer..'
+    wget -q https://github.com/vrana/adminer/releases/download/v4.7.1/adminer-4.7.1-mysql.php #Installation de Adminer
+    mv adminer-4.7.1-mysql.php ./${file}/adminer.php
+    echo 'Done!'
+    ;;
+  Phpmyadmin)
+    echo 'Installation de PhpMyAdmin..'
+    wget -q https://files.phpmyadmin.net/phpMyAdmin/4.9.4/phpMyAdmin-4.9.4-all-languages.tar.gz #Installation de Adminer
+    mkdir ./${file}/phpmyadmin
+    tar -zxf phpMyAdmin-4.9.4-all-languages.tar.gz -C ./${file}/phpmyadmin
+    echo 'Done!'
+    ;;
+  esac
+  break
+done
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #Création du script d'installation une fois dans la VM
 
