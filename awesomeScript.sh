@@ -1,16 +1,16 @@
 #!/bin/bash
 
-# # # # # # # # # # This script is awesome! # # # # # # # # # #
+# # # # # # # # # # This script is awesome! # # # # # # # # # #
 
 clear
 rm Vagrantfile ubuntu-xenial-16.04-cloudimg-console.log
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 echo 'Voici une liste des VMs:'
 vboxmanage list vms
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # Vieux trucs pour validation, inutile.
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # Vieux trucs pour validation, inutile.
 #echo 'Veux tu allumer une VM? 1)Oui 2)Non'
 #select opt in Oui Non
 #do
@@ -26,7 +26,7 @@ vboxmanage list vms
 #	break
 #done
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 #echo 'Veux tu éteindre une VM?'
 #select opt2 in Oui Non
@@ -43,7 +43,7 @@ vboxmanage list vms
 #	break
 #done
 
-# # # # # # # # # # # # # # Core # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # Core # # # # # # # # # # # # # # # # #
 
 echo "...Création d'une nouvelle VM..."
 
@@ -67,7 +67,7 @@ if [[ "$file" == "" ]]; then #Nom par défaut du dossier de syncronisation de Va
   file='data'
 fi
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 echo "
 # -*- mode: ruby -*-
@@ -83,25 +83,25 @@ Vagrant.configure(\"2\") do |config|
 end
 " > ./Vagrantfile #Ficher de config de Vagrant
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 mkdir ./${file} #Dossier sync
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 echo 'Installation de Adminer..'
 wget -q https://github.com/vrana/adminer/releases/download/v4.7.1/adminer-4.7.1-mysql.php #Installation de Adminer
 echo 'Done!'
 mv adminer-4.7.1-mysql.php ./${file}/adminer.php
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #Création du script d'installation une fois dans la VM
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #Création du script d'installation une fois dans la VM
 
 # shellcheck disable=SC2016
 echo '
   #!/bin/bash
 
   echo "Choisis une version de PHP"
-  select optPHP in php7.3 php7.2 php5.6; do
+  select optPHP in php7.4 php7.3 php7.2 php5.6; do
     sudo add-apt-repository ppa:ondrej/php -y
     sudo apt update
     sudo apt install apache2 -y
@@ -142,12 +142,12 @@ esac
 
     sudo service apache2 restart
     echo "Done! Ton mot de passe mysql est 1234, change le!"
-    rm ./install.sh
+    rm /var/www/html/install.sh
     break
   done
   ' > ./$file/install.sh
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 rm awesomeScript.sh
 
