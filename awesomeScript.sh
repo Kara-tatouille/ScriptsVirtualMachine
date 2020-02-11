@@ -102,7 +102,8 @@ select optSGBD in Adminer Phpmyadmin; do
     echo 'Installation de PhpMyAdmin..'
     wget -q https://files.phpmyadmin.net/phpMyAdmin/4.9.4/phpMyAdmin-4.9.4-all-languages.tar.gz #Installation de Adminer
     mkdir ./${file}/phpmyadmin
-    tar -zxf phpMyAdmin-4.9.4-all-languages.tar.gz -C ./${file}/phpmyadmin
+    tar -zxf phpMyAdmin-4.9.4-all-languages.tar.gz -C ./${file}/phpmyadmin --strip-components 1
+    rm -R phpMyAdmin-4.9.4-all-languages.tar.gz
     echo 'Done!'
     ;;
   esac
